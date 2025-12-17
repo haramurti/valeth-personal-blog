@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blog Rahasia Valeth</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .post { border-bottom: 1px solid #ddd; padding: 20px 0; }
+        h2 { color: #333; }
+        .date { color: #888; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <h1>Catatan Harian</h1>
+
+    {{ range . }}
+    <div class="post">
+        <h2>{{ .Title }}</h2>
+        <p class="date">{{ .Date }}</p>
+        <p>{{ .Content }}</p>
+    </div>
+    {{ else }}
+        <p>Belum ada curhatan nih.</p>
+    {{ end }}
+
+</body>
+</html>

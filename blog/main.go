@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"text/template"
 )
 
 type blogPost struct {
@@ -63,17 +64,20 @@ func getPost() []blogPost{
 func postsHandler(w http.ResponseWriter, r *http.Request) {
 
 	posts := getPost()
+	fp := "views/index.html"
 
-	jsonResponse, err := json.Marshal(posts)
+	tmpl, err := template.ParseFiles(fp)
 	if err != nil {
-		http.Error(w, "Waduh, server pusing.", http.StatusInternalServerError)
+		http.Error(w, "template have error : "+ err.Error(),http.StatusInternalServerError)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	
-	w.Write(jsonResponse)
+	 err = tmpl.Execute(w, posts)
+    if err != nil {
+        http.Error(w, "failed render html: "+err.Error(), http.StatusInternalServerError)
+    }
 }
+
 
 func main (){
 	fmt.Println("server is running.......")
