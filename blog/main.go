@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"os"
 )
 
@@ -12,6 +13,7 @@ type blogPost struct {
     Content string `json:"content"`
     Date    string `json:"date"`
 }
+
 
 
 
@@ -56,6 +58,23 @@ func getPost() []blogPost{
 
 }
 
+
+
+func postsHandler(w http.ResponseWriter, r *http.Request) {
+
+	posts := getPost()
+
+	jsonResponse, err := json.Marshal(posts)
+	if err != nil {
+		http.Error(w, "Waduh, server pusing.", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	
+	w.Write(jsonResponse)
+}
+
 func main (){
 	fmt.Println("server is running.......")
 
@@ -94,6 +113,15 @@ func main (){
 
 	//setelah pembacaan ulang 
 	fmt.Println(getPost())
+	fmt.Println()
+	fmt.Println()
+	fmt.Println("server is now starting ")
+	fmt.Println("server is starting in local host http://8484")
+	fmt.Println("ctrl+c to stop server")
+
+	http.HandleFunc("/", postsHandler)
+
+	http.ListenAndServe(":8484",nil)
 	
 }
 
