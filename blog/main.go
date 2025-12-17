@@ -13,6 +13,26 @@ type blogPost struct {
     Date    string `json:"date"`
 }
 
+
+
+func savePost(newPost blogPost) error {
+	posts := getPost()
+
+	posts=append(posts, newPost)
+
+	dataBytes, err :=json.MarshalIndent(posts, "","  ")
+	if (err != nil ){
+		return err
+	}
+
+	err = os.WriteFile("data/data.json", dataBytes, 0644)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func getPost() []blogPost{
 	fileBytes, err := os.ReadFile("data/data.json")
 	
@@ -47,6 +67,33 @@ func main (){
 	data := getPost()
 	fmt.Println("file data.json value =")
 	fmt.Println(data)
+
+	//saving file baru 
+	fmt.Println()
+	fmt.Println()
+
+
+	artikelBaru := blogPost{
+        ID:      6,
+        Title:   "udah sampe di karawang seru juga",
+        Content: "Ternyata gak sesusah itu kalau paham konsepnya.",
+        Date:    "2025-12-17",
+    }
+
+	fmt.Println("saving blog to data......")
+	err := savePost(artikelBaru)
+
+	if err !=nil {
+		fmt.Println("failed saving file ", err)
+	}else {
+		fmt.Println("succes saving file")
+	}
+
+	fmt.Println()
+	fmt.Println()
+
+	//setelah pembacaan ulang 
+	fmt.Println(getPost())
 	
 }
 
