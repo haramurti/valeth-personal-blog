@@ -97,9 +97,9 @@ func main (){
 
 
 	artikelBaru := blogPost{
-        ID:      6,
-        Title:   "udah sampe di karawang seru juga",
-        Content: "Ternyata gak sesusah itu kalau paham konsepnya.",
+        ID:      10,
+        Title:   "ayam",
+        Content: "Ternyayamlakdjf;lakjd f;kadjsa.",
         Date:    "2025-12-17",
     }
 
