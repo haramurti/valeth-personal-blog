@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tulis Artikel Baru</title>
+</head>
+<body>
+    <h1>Tulis Sesuatu yang Keren (atau Galau)</h1>
+    
+    <form action="/create" method="POST">
+        <div>
+            <label>Judul:</label><br>
+            <input type="text" name="title" required>
+        </div>
+        <br>
+        <div>
+            <label>Isi Tulisan:</label><br>
+            <textarea name="content" rows="10" cols="30" required></textarea>
+        </div>
+        <br>
+        <button type="submit">Kirim ke Masa Depan</button>
+    </form>
+    
+    <br>
+    <a href="/">Kembali ke Home</a>
+</body>
+</html>
