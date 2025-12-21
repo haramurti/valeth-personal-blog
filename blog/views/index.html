@@ -1,25 +1,133 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Blog Rahasia banget Valeth</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Rahasia Valeth (Dark Mode)</title>
     <style>
-        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-        .post { border-bottom: 1px solid #ddd; padding: 20px 0; }
-        h2 { color: #333; }
-        .date { color: #888; font-size: 0.9em; }
+        /* --- Palette Warna Obsidian Vibe --- */
+        :root {
+            --bg-main: #1e1e1e;      /* Gelap banget kayak arang */
+            --text-main: #dcddde;    /* Putih gading, gak nusuk mata */
+            --text-muted: #8e9297;   /* Abu-abu buat tanggal */
+            --accent: #7f6df2;       /* Ungu Obsidian buat link/tombol */
+            --accent-hover: #988af4; /* Ungu mudan pas disorot */
+            --border-color: #2f3136; /* Garis pemisah gelap */
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 30px 20px; 
+            background-color: var(--bg-main); /* Background Gelap */
+            color: var(--text-main);          /* Teks Terang */
+            line-height: 1.6;
+        }
+
+        h1 {
+            color: #ffffff;
+            margin-bottom: 30px;
+        }
+
+        /* Styling per Postingan */
+        .post { 
+            border-bottom: 1px solid var(--border-color); /* Garis pemisah gelap */
+            padding: 25px 0; 
+        }
+
+        /* Styling Judul Link */
+        h2 { 
+            margin-bottom: 8px; 
+            margin-top: 0;
+        }
+        h2 a { 
+            color: #ffffff; /* Judul warnanya putih */
+            text-decoration: none; 
+            transition: color 0.2s ease;
+        }
+        h2 a:hover { 
+            color: var(--accent); /* Pas di-hover jadi ungu */
+            text-decoration: none;
+        }
+
+        /* Styling Tanggal */
+        .date { 
+            color: var(--text-muted); 
+            font-size: 0.9em; 
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        /* Styling Isi Konten Singkat */
+        .content-preview {
+            color: var(--text-main);
+            opacity: 0.9;
+        }
+        
+        /* Tombol "Tulis Baru" ala Obsidian */
+        .btn-new {
+            display: inline-block;
+            background-color: var(--accent);
+            color: #fff;
+            padding: 10px 25px;
+            text-decoration: none;
+            border-radius: 6px; /* Biar agak tumpul dikit sudutnya */
+            font-weight: 600;
+            font-size: 0.9em;
+            margin-bottom: 30px;
+            transition: background-color 0.2s ease;
+        }
+        .btn-new:hover { 
+            background-color: var(--accent-hover); 
+            box-shadow: 0 4px 12px rgba(127, 109, 242, 0.3); /* Efek glow dikit */
+        }
+
+        /* Link "Lihat Detail" di bawah */
+        .detail-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.85em;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 10px;
+            transition: color 0.2s;
+        }
+        .detail-link:hover {
+            color: var(--accent-hover);
+            text-decoration: underline;
+        }
+
+        /* Pesan kalau kosong */
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
-    <h1>Catatan Harian</h1>
+    <h1>Catatan Harian (Obsidian Mode)</h1>
+
+    <a href="/create" class="btn-new">+ Buat Catatan Baru</a>
 
     {{ range . }}
     <div class="post">
-        <h2>{{ .Title }}</h2>
+        <h2>
+            <a href="/post?id={{ .ID }}">{{ .Title }}</a>
+        </h2>
+        
         <p class="date">{{ .Date }}</p>
-        <p>{{ .Content }}</p>
+        
+        <p class="content-preview">{{ .Content }}</p>
+        
+        <a href="/post?id={{ .ID }}" class="detail-link">Buka Catatan &rarr;</a>
     </div>
     {{ else }}
-        <p>Belum ada curhatan nih.</p>
+        <div class="empty-state">
+            <p>Belum ada catatan tersimpan di vault ini.</p>
+        </div>
     {{ end }}
 
 </body>

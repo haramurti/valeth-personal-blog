@@ -58,6 +58,7 @@ func main (){
 
     http.HandleFunc("/", handlers.PostsHandler)
 	http.HandleFunc("/create", handlers.CreatePostHandler)
+	http.HandleFunc("/post", handlers.DetailPostHandler)
 
     http.ListenAndServe(":8484",nil)   
 }

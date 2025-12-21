@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -69,11 +70,8 @@ func SavePost(newPost BlogPost) error {
     return nil
 }
 
-// Jangan lupa import "time" dan "strconv" di atas kalau belum ada
-// import ( ... "time", "math/rand" ... )
 
 func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
-    // Kalau user cuma mau LIHAT form (GET)
     if r.Method == "GET" {
         tmpl, err := template.ParseFiles("views/create.html")
         if err != nil {
@@ -99,7 +97,7 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
             ID:      id,
             Title:   judul,
             Content: isi,
-            Date:    time.Now().Format("2006-01-02"), // Format tanggal hari ini
+            Date:    time.Now().Format("2006-01-02"), 
         }
 
         // 4. Simpen deh!
@@ -113,5 +111,47 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
         // 5. Balikin user ke halaman utama
         http.Redirect(w, r, "/", http.StatusSeeOther)
     }
+
+
+    
+}
+
+func GetPostByID(id int) *BlogPost {
+    posts := GetPost() // Ambil semua data dulu
+    
+    for _, post := range posts {
+        if post.ID == id {
+            return &post // Ketemu! Balikin alamatnya
+        }
+    }
+    return nil // Gak ketemu, sedih :(
+}
+
+func DetailPostHandler(w http.ResponseWriter, r *http.Request) {
+    // 1. Ambil "id" dari URL (?id=...)
+    idStr := r.URL.Query().Get("id")
+    
+    // 2. Ubah string jadi angka (int)
+    id, err := strconv.Atoi(idStr)
+    if err != nil {
+        http.Error(w, "ID-nya gak valid woy!", http.StatusBadRequest)
+        return
+    }
+
+    // 3. Cari datanya
+    post := GetPostByID(id)
+    if post == nil {
+        http.Error(w, "Artikel gak ditemuin (404 Not Found)", http.StatusNotFound)
+        return
+    }
+
+    // 4. Render ke HTML khusus detail
+    tmpl, err := template.ParseFiles("views/detail.html")
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+    
+    tmpl.Execute(w, post)
 }
 
