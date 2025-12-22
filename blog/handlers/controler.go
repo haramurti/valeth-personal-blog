@@ -155,3 +155,64 @@ func DetailPostHandler(w http.ResponseWriter, r *http.Request) {
     tmpl.Execute(w, post)
 }
 
+func EditPostHandler(w http.ResponseWriter, r *http.Request) {
+    // 1. Ambil ID
+    idStr := r.URL.Query().Get("id")
+    id, err := strconv.Atoi(idStr)
+    if err != nil {
+        http.Error(w, "ID gak valid", http.StatusBadRequest)
+        return
+    }
+
+    // 2. Load semua data
+    posts := GetPost()
+
+    // --- LOGIKA MENAMPILKAN FORM (GET) ---
+    if r.Method == "GET" {
+        // Cari postingan yang mau diedit
+        var targetPost *BlogPost
+        for _, post := range posts {
+            if post.ID == id {
+                targetPost = &post
+                break
+            }
+        }
+
+        if targetPost == nil {
+            http.Error(w, "Post gak ketemu", http.StatusNotFound)
+            return
+        }
+
+        // Tampilin HTML edit dengan data lama
+        tmpl, err := template.ParseFiles("views/edit.html")
+        if err != nil {
+            http.Error(w, err.Error(), http.StatusInternalServerError)
+            return
+        }
+        tmpl.Execute(w, targetPost)
+        return
+    }
+
+    // --- LOGIKA MENYIMPAN PERUBAHAN (POST) ---
+    if r.Method == "POST" {
+        // Kita loop pake index (i) biar bisa ngubah data aslinya di dalam array
+        for i, post := range posts {
+            if post.ID == id {
+                // Update datanya
+                posts[i].Title = r.FormValue("title")
+                posts[i].Content = r.FormValue("content")
+                // Tanggal mau diupdate jadi 'Edited at...' atau tetep? 
+                // Kita biarin tanggal asli aja dulu biar kenangannya terjaga.
+                
+                // Simpan ke File JSON
+                dataBytes, _ := json.MarshalIndent(posts, "", "  ")
+                os.WriteFile("data/data.json", dataBytes, 0644)
+                
+                // Balik ke halaman detail
+                http.Redirect(w, r, "/post?id="+idStr, http.StatusSeeOther)
+                return
+            }
+        }
+    }
+}
+

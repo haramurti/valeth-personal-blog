@@ -12,6 +12,8 @@
             --accent: #7f6df2;
             --accent-hover: #988af4;
             --border-color: #2f3136;
+            --danger: #e04545; /* Merah */
+            --warning: #f1c40f; /* Kuning */
         }
 
         body { 
@@ -21,56 +23,71 @@
             padding: 40px 20px; 
             background-color: var(--bg-main); 
             color: var(--text-main);
-            line-height: 1.8; /* Biar enak dibaca, gak rapet-rapet */
+            line-height: 1.8;
         }
 
-        article {
-            background-color: transparent;
+        article { background-color: transparent; }
+
+        h1 { font-size: 2.2em; margin-bottom: 5px; color: #ffffff; line-height: 1.2; }
+
+        small { color: var(--text-muted); font-size: 0.85em; display: block; margin-bottom: 20px; }
+
+        hr { border: 0; border-top: 1px solid var(--border-color); margin: 30px 0; }
+
+        p { font-size: 1em; white-space: pre-wrap; }
+
+        /* --- STYLE TOMBOL MINIMALIS (TEXT ONLY) --- */
+        
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 50px; /* Jarak agak jauh biar misah sama konten */
+            padding-top: 10px;
         }
 
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 5px;
-            color: #ffffff;
-            line-height: 1.2;
+        .right-buttons {
+            display: flex;
+            align-items: center;
+            gap: 20px; /* Jarak antar teks agak lebar biar lega */
         }
 
-        small {
-            color: var(--text-muted);
-            font-size: 0.9em;
-            display: block;
-            margin-bottom: 20px;
-        }
-
-        hr {
-            border: 0;
-            border-top: 1px solid var(--border-color);
-            margin: 30px 0;
-        }
-
-        p {
-            font-size: 1.1em; /* Tulisan isi agak gedean dikit biar jelas */
-            white-space: pre-wrap; /* Biar spasi/enter di text editor kebaca */
-        }
-
-        /* Link Balik */
-        .btn-back {
-            display: inline-block;
-            color: var(--accent);
+        /* Reset semua gaya tombol biar jadi teks biasa */
+        .btn {
             text-decoration: none;
-            font-weight: 600;
-            border: 1px solid var(--border-color);
-            padding: 10px 20px;
-            border-radius: 6px;
-            transition: all 0.2s;
-            margin-top: 20px;
+            background: none;
+            border: none;
+            padding: 0;
+            margin: 0;
+            cursor: pointer;
+            font-size: 0.85em; /* Ukuran kecil */
+            font-family: inherit;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            color: var(--text-muted); /* Defaultnya abu-abu pudar (Lowkey banget) */
+            opacity: 0.7;
         }
 
-        .btn-back:hover {
-            background-color: #2f3136;
-            color: var(--accent-hover);
-            border-color: var(--accent);
+        .btn:hover {
+            opacity: 1; /* Pas di-hover jadi jelas */
+            text-decoration: underline; /* Garis bawah tipis pas hover */
         }
+
+        /* 1. Tombol Balik */
+        .btn-back:hover {
+            color: var(--text-main); /* Jadi putih pas hover */
+        }
+
+        /* 2. Tombol Edit (Khusus) */
+        .btn-edit:hover {
+            color: var(--warning); /* Jadi Kuning Emas */
+        }
+
+        /* 3. Tombol Hapus (Khusus) */
+        .btn-delete:hover {
+            color: var(--danger); /* Jadi Merah Bahaya */
+        }
+
     </style>
 </head>
 <body>
@@ -82,26 +99,18 @@
         <p>{{.Content}}</p> 
     </article>
 
-    <br>
-    <a href="/" class="btn-back">&larr; Balik ke Menu Utama</a>
+    <div class="action-bar">
+        
+        <a href="/" class="btn btn-back">&larr; menu utama</a>
 
-    <div class="action-buttons">
-        <a href="/" class="btn-back">&larr; Balik</a>
+        <div class="right-buttons">
+            <a href="/edit?id={{.ID}}" class="btn btn-edit">edit</a>
 
-        <div style="display: flex; gap: 10px;">
-            <a href="/edit?id={{.ID}}" style="text-decoration: none;">
-                <button type="button" style="
-                    background: transparent; color: #f1c40f; 
-                    border: 1px solid #f1c40f; padding: 8px 16px; 
-                    border-radius: 4px; cursor: pointer; font-weight: 600;">
-                    Edit
-                </button>
-            </a>
-
-            <form action="/delete?id={{.ID}}" method="POST" onsubmit="return confirm('Yakin?');">
-                <button type="submit" class="btn-delete">Hapus</button>
+            <form action="/delete?id={{.ID}}" method="POST" onsubmit="return confirm('Yakin mau hapus?');" style="margin: 0;">
+                <button type="submit" class="btn btn-delete">hapus</button>
             </form>
         </div>
+
     </div>
 </body>
 </html>
