@@ -84,5 +84,24 @@
 
     <br>
     <a href="/" class="btn-back">&larr; Balik ke Menu Utama</a>
+
+    <div class="action-buttons">
+        <a href="/" class="btn-back">&larr; Balik</a>
+
+        <div style="display: flex; gap: 10px;">
+            <a href="/edit?id={{.ID}}" style="text-decoration: none;">
+                <button type="button" style="
+                    background: transparent; color: #f1c40f; 
+                    border: 1px solid #f1c40f; padding: 8px 16px; 
+                    border-radius: 4px; cursor: pointer; font-weight: 600;">
+                    Edit
+                </button>
+            </a>
+
+            <form action="/delete?id={{.ID}}" method="POST" onsubmit="return confirm('Yakin?');">
+                <button type="submit" class="btn-delete">Hapus</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

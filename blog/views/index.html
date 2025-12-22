@@ -3,125 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog Rahasia Valeth (Dark Mode)</title>
+    <title>Blog Rahasia Valeth (Obsidian Mode)</title>
     <style>
-        /* --- Palette Warna Obsidian Vibe --- */
         :root {
-            --bg-main: #1e1e1e;      /* Gelap banget kayak arang */
-            --text-main: #dcddde;    /* Putih gading, gak nusuk mata */
-            --text-muted: #8e9297;   /* Abu-abu buat tanggal */
-            --accent: #7f6df2;       /* Ungu Obsidian buat link/tombol */
-            --accent-hover: #988af4; /* Ungu mudan pas disorot */
-            --border-color: #2f3136; /* Garis pemisah gelap */
+            --bg-main: #1e1e1e;
+            --text-main: #dcddde;
+            --text-muted: #8e9297;
+            --accent: #7f6df2;
+            --accent-hover: #988af4;
+            --border-color: #2f3136;
         }
 
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
             max-width: 800px; 
             margin: 0 auto; 
-            padding: 30px 20px; 
-            background-color: var(--bg-main); /* Background Gelap */
-            color: var(--text-main);          /* Teks Terang */
+            padding: 20px; 
+            background-color: var(--bg-main); 
+            color: var(--text-main);
             line-height: 1.6;
         }
 
-        h1 {
-            color: #ffffff;
-            margin-bottom: 30px;
+        /* --- HEADER AREA --- */
+        .site-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        /* Styling per Postingan */
-        .post { 
-            border-bottom: 1px solid var(--border-color); /* Garis pemisah gelap */
-            padding: 25px 0; 
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* Jarak antara logo dan tulisan */
+            text-decoration: none; /* Biar gak ada garis bawah di link logo */
         }
 
-        /* Styling Judul Link */
-        h2 { 
-            margin-bottom: 8px; 
-            margin-top: 0;
-        }
-        h2 a { 
-            color: #ffffff; /* Judul warnanya putih */
-            text-decoration: none; 
-            transition: color 0.2s ease;
-        }
-        h2 a:hover { 
-            color: var(--accent); /* Pas di-hover jadi ungu */
-            text-decoration: none;
+        .logo-img {
+            width: 50px; /* Ukuran Logo, sesuaikan selera */
+            height: 50px;
+            object-fit: contain;
+            /* Sedikit efek filter biar nyatu sama dark mode kalau logonya putihan */
+            filter: drop-shadow(0 0 5px rgba(127, 109, 242, 0.5)); 
         }
 
-        /* Styling Tanggal */
-        .date { 
-            color: var(--text-muted); 
-            font-size: 0.9em; 
-            margin-top: 0;
-            margin-bottom: 15px;
+        .logo-text {
+            display: flex;
+            flex-direction: column; /* Biar Kanji di atas, Latin di bawah */
+            justify-content: center;
         }
-        
-        /* Styling Isi Konten Singkat */
-        .content-preview {
-            color: var(--text-main);
-            opacity: 0.9;
+
+        .kanji {
+            font-size: 0.8em;
+            color: var(--accent); /* Kanji warna ungu */
+            letter-spacing: 2px;
+            font-weight: bold;
+            line-height: 1;
         }
-        
-        /* Tombol "Tulis Baru" ala Obsidian */
+
+        .brand-name {
+            font-size: 1.4em;
+            font-weight: 500;
+            color: #fff;
+            letter-spacing: 1px;
+            line-height: 1.2;
+
+        }
+
+        /* --- SISA CSS LAMA --- */
         .btn-new {
             display: inline-block;
             background-color: var(--accent);
             color: #fff;
-            padding: 10px 25px;
+            padding: 5px 14px;
             text-decoration: none;
-            border-radius: 6px; /* Biar agak tumpul dikit sudutnya */
+            border-radius: 6px;
             font-weight: 600;
             font-size: 0.9em;
             margin-bottom: 30px;
             transition: background-color 0.2s ease;
         }
-        .btn-new:hover { 
-            background-color: var(--accent-hover); 
-            box-shadow: 0 4px 12px rgba(127, 109, 242, 0.3); /* Efek glow dikit */
-        }
+        .btn-new:hover { background-color: var(--accent-hover); }
 
-        /* Link "Lihat Detail" di bawah */
-        .detail-link {
-            color: var(--accent);
-            text-decoration: none;
-            font-size: 0.85em;
-            font-weight: 600;
-            display: inline-block;
-            margin-top: 10px;
-            transition: color 0.2s;
-        }
-        .detail-link:hover {
-            color: var(--accent-hover);
-            text-decoration: underline;
-        }
-
-        /* Pesan kalau kosong */
-        .empty-state {
-            text-align: center;
-            padding: 50px;
-            color: var(--text-muted);
-            font-style: italic;
-        }
+        .post { border-bottom: 1px solid var(--border-color); padding: 25px 0; }
+        h2 { margin-bottom: 8px; margin-top: 0; }
+        h2 a { color: #ffffff; text-decoration: none; transition: color 0.2s ease; }
+        h2 a:hover { color: var(--accent); }
+        .date { color: var(--text-muted); font-size: 0.9em; margin-top: 0; margin-bottom: 15px; }
+        .content-preview { color: var(--text-main); opacity: 0.9; }
+        .detail-link { color: var(--accent); text-decoration: none; font-size: 0.85em; font-weight: 600; }
+        .empty-state { text-align: center; padding: 50px; color: var(--text-muted); font-style: italic; }
     </style>
 </head>
 <body>
-    <h1>Catatan Harian (Obsidian Mode)</h1>
 
+    <header class="site-header">
+        <a href="/" class="logo-container">
+            <img src="/static/images/logoObsidian.png" alt="Logo Obsidian" class="logo-img">
+            
+            <div class="logo-text">
+                <span class="kanji">黒曜石</span> 
+                <span class="brand-name">Blog Buat si A A A itu, si jutek</span>
+            </div>
+        </a>
+    </header>
     <a href="/create" class="btn-new">+ Buat Catatan Baru</a>
 
     {{ range . }}
     <div class="post">
-        <h2>
-            <a href="/post?id={{ .ID }}">{{ .Title }}</a>
-        </h2>
-        
+        <h2><a href="/post?id={{ .ID }}">{{ .Title }}</a></h2>
         <p class="date">{{ .Date }}</p>
-        
         <p class="content-preview">{{ .Content }}</p>
-        
         <a href="/post?id={{ .ID }}" class="detail-link">Buka Catatan &rarr;</a>
     </div>
     {{ else }}

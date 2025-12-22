@@ -48,6 +48,8 @@ func main (){
 
 
     fmt.Println(handlers.GetPost())
+
+    
     
     fmt.Println()
     fmt.Println()
@@ -55,7 +57,9 @@ func main (){
     fmt.Println("server is starting in local host http://localhost:8484") 
     fmt.Println("ctrl+c to stop server")
 
-
+fs := http.FileServer(http.Dir("public"))
+    http.Handle("/static/", http.StripPrefix("/static/", fs))
+    
     http.HandleFunc("/", handlers.PostsHandler)
 	http.HandleFunc("/create", handlers.CreatePostHandler)
 	http.HandleFunc("/post", handlers.DetailPostHandler)
