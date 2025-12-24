@@ -3,105 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tulis Artikel Baru</title>
+    <title>Tulis Catatan - Obsidian Mode</title>
     <style>
         :root {
             --bg-main: #1e1e1e;
             --text-main: #dcddde;
-            --input-bg: #2f3136; /* Warna background kotak input */
+            --text-muted: #666;
             --accent: #7f6df2;
-            --accent-hover: #988af4;
-            --border-color: #444;
+            --border-color: #333; /* Warna garis yang lebih gelap/samar */
         }
 
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            max-width: 600px; /* Lebih sempit dikit biar fokus nulisnya */
+            max-width: 700px; /* Lebar pas buat fokus nulis */
             margin: 0 auto; 
             padding: 40px 20px; 
             background-color: var(--bg-main); 
             color: var(--text-main);
         }
 
-        h1 { color: #fff; margin-bottom: 30px; }
+        h1 { 
+            color: #fff; 
+            margin-bottom: 40px; 
+            font-size: 1.5em;
+            font-weight: 500;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
 
-        /* Styling Label */
+        /* --- STYLING INPUT "KOTAK KOSONG" --- */
         label {
             display: block;
             margin-bottom: 8px;
+            font-size: 0.85em;
+            color: var(--text-muted);
             font-weight: 600;
-            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        /* Styling Input dan Textarea (Kotak ngetik) */
         input[type="text"], textarea {
             width: 100%;
-            padding: 12px;
-            background-color: var(--input-bg);
-            border: 1px solid var(--border-color);
-            color: #fff;
-            border-radius: 6px;
+            padding: 15px;
+            
+            /* KUNCI MINIMALIS: Background Transparan & Border Tipis */
+            background-color: transparent; 
+            border: 1px solid var(--border-color); 
+            
+            color: var(--text-main);
+            border-radius: 4px; /* Sudut lancip dikit aja */
             font-size: 1em;
-            font-family: inherit;
-            box-sizing: border-box; /* Biar padding gak bikin lebar offside */
-            transition: border-color 0.2s;
-            margin-bottom: 20px;
+            box-sizing: border-box;
+            transition: all 0.2s;
+            margin-bottom: 30px;
         }
 
-        /* Efek pas lagi diketik (Focus) */
+        /* Khusus area isi, pake font koding biar kerasa 'Editor' banget */
+        textarea {
+            font-family: "Consolas", "Monaco", "Courier New", monospace;
+            line-height: 1.6;
+        }
+
+        /* Efek Focus: Garisnya jadi Ungu, tetep gak ada background */
         input[type="text"]:focus, textarea:focus {
             outline: none;
-            border-color: var(--accent); /* Nyala Ungu */
-            box-shadow: 0 0 5px rgba(127, 109, 242, 0.3);
+            border-color: var(--accent);
         }
 
-        /* Tombol Kirim */
+        /* --- TOMBOL KECIL "GHOST BUTTON" --- */
+        .button-group {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
         button {
-            background-color: var(--accent);
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 6px;
-            font-size: 1em;
-            font-weight: bold;
+            background-color: transparent; /* Transparan */
+            color: var(--accent);          /* Teks Ungu */
+            border: 1px solid var(--accent); /* Garis Ungu */
+            
+            padding: 8px 16px;             /* Ukuran Kecil */
+            border-radius: 4px;
+            font-size: 0.85em;             /* Font Kecil */
+            font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.2s;
-            width: 100%; /* Tombol full width biar mantap */
+            transition: all 0.2s;
         }
 
         button:hover {
-            background-color: var(--accent-hover);
+            background-color: var(--accent); /* Pas hover baru isi warna */
+            color: #fff;
         }
 
         /* Link Batal */
         .cancel-link {
-            display: block;
-            text-align: center;
-            margin-top: 15px;
-            color: #8e9297;
+            color: var(--text-muted);
             text-decoration: none;
-            font-size: 0.9em;
+            font-size: 0.85em;
+            transition: color 0.2s;
         }
-        .cancel-link:hover { color: #fff; text-decoration: underline; }
+        .cancel-link:hover { color: #fff; }
 
     </style>
 </head>
 <body>
-    <h1>Tulis Sesuatu yang Keren</h1>
+    <h1>new log</h1>
     
     <form action="/create" method="POST">
         <div>
-            <label>Judul Tulisan</label>
-            <input type="text" name="title" placeholder="Misal: Kenapa Kucing Gue Sombong..." required autocomplete="off">
+            <label>Judul</label>
+            <input type="text" name="title" placeholder="..." required autocomplete="off">
         </div>
         
         <div>
-            <label>Isi Curhatan</label>
-            <textarea name="content" rows="12" placeholder="Tumpahkan segalanya di sini..." required></textarea>
+            <label>Isi (Markdown Ready)</label>
+            <textarea name="content" rows="15" placeholder="..." required></textarea>
         </div>
         
-        <button type="submit">Kirim ke Masa Depan &rarr;</button>
-        <a href="/" class="cancel-link">Gak jadi deh, takut viral</a>
+        <div class="button-group">
+            <button type="submit">Simpan Catatan</button>
+            <a href="/" class="cancel-link">Batal</a>
+        </div>
     </form>
 </body>
 </html>

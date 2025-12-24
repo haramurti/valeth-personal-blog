@@ -17,21 +17,74 @@ type BlogPost struct {
     Date    string `json:"date"`
 }
 
-func PostsHandler(w http.ResponseWriter, r *http.Request) {
-    posts := GetPost()
-    fp := "views/index.html"
+func IsLoggedIn(r *http.Request) bool {
+    // Coba minta cookie 'session_token' dari browser
+    cookie, err := r.Cookie("session_token")
+    
+    // Kalau gak punya cookie, ATAU isinya bukan "admin_valid", tolak!
+    if err != nil || cookie.Value != "admin_valid" {
+        return false
+    }
+    
+    // Kalau punya, boleh lewat
+    return true
+}
 
-    tmpl, err := template.ParseFiles(fp)
-    if err != nil {
-        http.Error(w, "template have error : "+err.Error(), http.StatusInternalServerError)
+// 2. Handler LOGIN (Tempat minta tiket)
+func LoginHandler(w http.ResponseWriter, r *http.Request) {
+    // Kalau cuma buka halaman (GET)
+    if r.Method == "GET" {
+        tmpl, _ := template.ParseFiles("views/login.html")
+        tmpl.Execute(w, nil)
         return
     }
 
-    err = tmpl.Execute(w, posts)
-    if err != nil {
-        http.Error(w, "failed render html: "+err.Error(), http.StatusInternalServerError)
+    // Kalau ngirim password (POST)
+    if r.Method == "POST" {
+        username := r.FormValue("username")
+        password := r.FormValue("password")
+
+        // === SETTING PASSWORD RAHASIA ===
+        // Ganti ini sesuka hati lu
+        if username == "valeth" && password == "ganteng" {
+            
+            // Bikin Tiket (Cookie)
+            expiration := time.Now().Add(24 * time.Hour) // Berlaku 24 jam
+            cookie := http.Cookie{
+                Name:    "session_token",
+                Value:   "admin_valid",
+                Expires: expiration,
+                Path:    "/", // Tiket berlaku di semua ruangan
+            }
+            
+            // Tempel tiket ke browser user
+            http.SetCookie(w, &cookie)
+
+            // Tendang ke halaman depan
+            http.Redirect(w, r, "/", http.StatusSeeOther)
+            return
+        }
+
+        // Kalau password salah, balikin ke halaman login + pesan error
+        tmpl, _ := template.ParseFiles("views/login.html")
+        tmpl.Execute(w, "Sandi salah. Kamu penyusup ya?")
     }
 }
+
+// 3. Handler LOGOUT (Buang tiket)
+func LogoutHandler(w http.ResponseWriter, r *http.Request) {
+    // Kita timpa tiket lama dengan tiket yang udah kadaluarsa (Expired masa lalu)
+    http.SetCookie(w, &http.Cookie{
+        Name:    "session_token",
+        Value:   "",
+        Expires: time.Now().Add(-1 * time.Hour), 
+        Path:    "/",
+    })
+    // Balikin ke home
+    http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+
 
 func GetPost() []BlogPost {
     fileBytes, err := os.ReadFile("data/data.json")
@@ -49,6 +102,22 @@ func GetPost() []BlogPost {
     }
 
     return posts
+}
+
+func PostsHandler(w http.ResponseWriter, r *http.Request) {
+    posts := GetPost()
+    fp := "views/index.html"
+
+    tmpl, err := template.ParseFiles(fp)
+    if err != nil {
+        http.Error(w, "template have error : "+err.Error(), http.StatusInternalServerError)
+        return
+    }
+
+    err = tmpl.Execute(w, posts)
+    if err != nil {
+        http.Error(w, "failed render html: "+err.Error(), http.StatusInternalServerError)
+    }
 }
 
 
@@ -72,6 +141,10 @@ func SavePost(newPost BlogPost) error {
 
 
 func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
+    if !IsLoggedIn(r) {
+        http.Redirect(w, r, "/login", http.StatusSeeOther)
+        return
+    }
     if r.Method == "GET" {
         tmpl, err := template.ParseFiles("views/create.html")
         if err != nil {
@@ -82,17 +155,13 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    // Kalau user NGIRIM data (POST)
+
     if r.Method == "POST" {
-        // 1. Ambil data dari form HTML
         judul := r.FormValue("title")
         isi := r.FormValue("content")
 
-        // 2. Bikin ID acak (biar gampang dulu, nanti kita rapihin)
-        // Note: Aslinya jangan gini ya, ini cara males tapi jalan :D
         id := int(time.Now().Unix()) 
 
-        // 3. Masukin ke struct
         postBaru := BlogPost{
             ID:      id,
             Title:   judul,
@@ -128,6 +197,10 @@ func GetPostByID(id int) *BlogPost {
 }
 
 func DetailPostHandler(w http.ResponseWriter, r *http.Request) {
+    if !IsLoggedIn(r) {
+        http.Redirect(w, r, "/login", http.StatusSeeOther)
+        return
+    }
     // 1. Ambil "id" dari URL (?id=...)
     idStr := r.URL.Query().Get("id")
     
@@ -154,8 +227,37 @@ func DetailPostHandler(w http.ResponseWriter, r *http.Request) {
     
     tmpl.Execute(w, post)
 }
+func DeletePostHandler(w http.ResponseWriter, r *http.Request) {
+    // --- PASANG SATPAM ---
+    if !IsLoggedIn(r) {
+        http.Redirect(w, r, "/login", http.StatusSeeOther)
+        return
+    }
+    // ---------------------
+
+    // Logika hapus (sama kayak tutorial sebelumnya)
+    idStr := r.URL.Query().Get("id")
+    id, _ := strconv.Atoi(idStr)
+    
+    posts := GetPost()
+    var newPosts []BlogPost
+    for _, post := range posts {
+        if post.ID != id {
+            newPosts = append(newPosts, post)
+        }
+    }
+    
+    dataBytes, _ := json.MarshalIndent(newPosts, "", "  ")
+    os.WriteFile("data/data.json", dataBytes, 0644)
+    http.Redirect(w, r, "/", http.StatusSeeOther)
+}
 
 func EditPostHandler(w http.ResponseWriter, r *http.Request) {
+    if !IsLoggedIn(r) {
+        http.Redirect(w, r, "/login", http.StatusSeeOther)
+        return
+    }
+    
     // 1. Ambil ID
     idStr := r.URL.Query().Get("id")
     id, err := strconv.Atoi(idStr)
@@ -215,4 +317,9 @@ func EditPostHandler(w http.ResponseWriter, r *http.Request) {
         }
     }
 }
+
+// --- SISTEM KEAMANAN (AUTH) ---
+
+// 1. Fungsi SATPAM (Cek apakah user punya tiket?)
+
 
