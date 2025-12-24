@@ -60,7 +60,12 @@ func main (){
     fs := http.FileServer(http.Dir("public"))
     http.Handle("/static/", http.StripPrefix("/static/", fs))
 
+http.HandleFunc("/", handlers.PostsHandler)
+    http.HandleFunc("/post", handlers.DetailPostHandler)
+    
 
+    http.HandleFunc("/login", handlers.LoginHandler)
+    http.HandleFunc("/logout", handlers.LogoutHandler)
 
     http.HandleFunc("/", handlers.PostsHandler)
 	http.HandleFunc("/create", handlers.CreatePostHandler)
