@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akses Admin - Obsidian Vault</title>
+    <style>
+        :root {
+            --bg-main: #1e1e1e;
+            --text-main: #dcddde;
+            --accent: #7f6df2;
+            --border-color: #333;
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            display: flex; justify-content: center; align-items: center; 
+            height: 100vh; margin: 0; background-color: var(--bg-main); color: var(--text-main);
+        }
+
+        .login-container { width: 300px; text-align: center; }
+
+        h1 { font-size: 1.2em; margin-bottom: 30px; font-weight: 500; letter-spacing: 1px; color: #fff; }
+
+        /* Input Transparan ala Obsidian */
+        input {
+            width: 100%; padding: 12px; margin-bottom: 15px;
+            background-color: transparent; 
+            border: 1px solid var(--border-color);
+            color: #fff; border-radius: 4px; box-sizing: border-box; 
+            text-align: center; font-size: 0.9em;
+        }
+        input:focus { outline: none; border-color: var(--accent); }
+
+        /* Tombol Ghost Minimalis */
+        button {
+            background-color: transparent; color: var(--accent);
+            border: 1px solid var(--accent); padding: 8px 20px;
+            border-radius: 4px; font-weight: 600; cursor: pointer;
+            width: 100%; transition: all 0.2s; font-size: 0.9em;
+        }
+        button:hover { background-color: var(--accent); color: #fff; }
+
+        .error { color: #e04545; font-size: 0.8em; margin-bottom: 15px; display: block; }
+        .back-link { display: block; margin-top: 20px; color: #666; font-size: 0.8em; text-decoration: none; }
+        .back-link:hover { color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Identifikasi Diri</h1>
+        
+        {{if .}} <span class="error">{{.}}</span> {{end}}
+
+        <form action="/login" method="POST">
+            <input type="text" name="username" placeholder="Codename" required autocomplete="off">
+            <input type="password" name="password" placeholder="Passcode" required>
+            <button type="submit">Buka Vault</button>
+        </form>
+        
+        <a href="/" class="back-link">&larr; Cuma mau baca aja</a>
+    </div>
+</body>
+</html>

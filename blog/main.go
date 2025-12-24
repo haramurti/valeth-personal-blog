@@ -60,7 +60,6 @@ func main (){
     fs := http.FileServer(http.Dir("public"))
     http.Handle("/static/", http.StripPrefix("/static/", fs))
 
-http.HandleFunc("/", handlers.PostsHandler)
     http.HandleFunc("/post", handlers.DetailPostHandler)
     
 
@@ -69,7 +68,6 @@ http.HandleFunc("/", handlers.PostsHandler)
 
     http.HandleFunc("/", handlers.PostsHandler)
 	http.HandleFunc("/create", handlers.CreatePostHandler)
-	http.HandleFunc("/post", handlers.DetailPostHandler)
     http.HandleFunc("/edit", handlers.EditPostHandler)
 
     http.ListenAndServe(":8484",nil)   
