@@ -7,68 +7,60 @@ import (
 	"valeth-personal-blog/handlers"
 )
 
+func main() {
+	fmt.Println("server is running.......")
 
-func main (){
-    fmt.Println("server is running.......")
+	fmt.Println("=======testing reading file json, below is just a example==========")
 
-    fmt.Println("=======testing reading file json, below is just a example==========")
-    
-    post := handlers.BlogPost{ID: 1, Title: "Tes", Content: "Isi", Date: "2025"}
-    fmt.Println(post)
-    fmt.Println("=========================================")
+	post := handlers.BlogPost{ID: 1, Title: "Tes", Content: "Isi", Date: "2025"}
+	fmt.Println(post)
+	fmt.Println("=========================================")
 
-    data := handlers.GetPost()
-    fmt.Println("file data.json value =")
-    fmt.Println(data)
+	data := handlers.GetPost()
+	fmt.Println("file data.json value =")
+	fmt.Println(data)
 
-    fmt.Println()
-    fmt.Println()
-    fmt.Println("=========================================")
+	fmt.Println()
+	fmt.Println()
+	fmt.Println("=========================================")
 
+	// artikelBaru := handlers.BlogPost{
+	//     ID:      10,
+	//     Title:   "ayam",
+	//     Content: "Ternyayamlakdjf;lakjd f;kadjsa.",
+	//     Date:    "2025-12-17",
+	// }
 
-    // artikelBaru := handlers.BlogPost{
-    //     ID:      10,
-    //     Title:   "ayam",
-    //     Content: "Ternyayamlakdjf;lakjd f;kadjsa.",
-    //     Date:    "2025-12-17",
-    // }
+	// fmt.Println("saving blog to data......")
 
-    // fmt.Println("saving blog to data......")
-    
-    // err := handlers.SavePost(artikelBaru)
+	// err := handlers.SavePost(artikelBaru)
 
-    // if err !=nil {
-    //     fmt.Println("failed saving file ", err)
-    // }else {
-    //     fmt.Println("succes saving file")
-    // }
+	// if err !=nil {
+	//     fmt.Println("failed saving file ", err)
+	// }else {
+	//     fmt.Println("succes saving file")
+	// }
 
-    fmt.Println()
-    fmt.Println()
+	fmt.Println()
+	fmt.Println()
 
+	fmt.Println(handlers.GetPost())
 
-    fmt.Println(handlers.GetPost())
+	fmt.Println()
+	fmt.Println()
+	fmt.Println("server is now starting ")
+	fmt.Println("server is starting in local host http://localhost:8484")
+	fmt.Println("ctrl+c to stop server")
 
-    
-    
-    fmt.Println()
-    fmt.Println()
-    fmt.Println("server is now starting ")
-    fmt.Println("server is starting in local host http://localhost:8484") 
-    fmt.Println("ctrl+c to stop server")
+	http.HandleFunc("/post", handlers.DetailPostHandler)
 
-    fs := http.FileServer(http.Dir("public"))
-    http.Handle("/static/", http.StripPrefix("/static/", fs))
+	http.HandleFunc("/login", handlers.LoginHandler)
+	http.HandleFunc("/logout", handlers.LogoutHandler)
 
-    http.HandleFunc("/post", handlers.DetailPostHandler)
-    
-
-    http.HandleFunc("/login", handlers.LoginHandler)
-    http.HandleFunc("/logout", handlers.LogoutHandler)
-
-    http.HandleFunc("/", handlers.PostsHandler)
+	http.HandleFunc("/", handlers.PostsHandler)
 	http.HandleFunc("/create", handlers.CreatePostHandler)
-    http.HandleFunc("/edit", handlers.EditPostHandler)
+	http.HandleFunc("/edit", handlers.EditPostHandler)
 
-    http.ListenAndServe(":8484",nil)   
+	http.ListenAndServe(":8484", nil)
+
 }
