@@ -41,6 +41,9 @@ func main() {
 	//     fmt.Println("succes saving file")
 	// }
 
+	fs := http.FileServer(http.Dir("public"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
+
 	fmt.Println()
 	fmt.Println()
 
