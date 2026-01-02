@@ -44,6 +44,8 @@ func main() {
 	fmt.Println()
 	fmt.Println()
 
+	fs := http.FileServer(http.Dir("public"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
 	fmt.Println(handlers.GetPost())
 
 	fmt.Println()
