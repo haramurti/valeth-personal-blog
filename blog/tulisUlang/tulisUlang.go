@@ -53,3 +53,23 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+func savePost(newPost blogpost) error {
+	allPosts := getpost()
+
+	allPosts = append(allPosts, newPost)
+
+	dataBytes, err := json.MarshalIndent(allPosts, "", " ")
+	if err != nil {
+		fmt.Println("cannot read turn data from slice to json.")
+	}
+
+	err = os.WriteFile("data.json", dataBytes, 0644)
+
+	if err != nil {
+		fmt.Println("cannot write data to data.json")
+	}
+
+	return nil
+
+}
