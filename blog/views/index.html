@@ -150,25 +150,25 @@
         </a>
 
         <div class="auth-menu">
-            <a href="/login" class="auth-link">masuk</a>
-            <a href="/logout" class="auth-link logout">keluar</a>
+            <a href="/login" class="auth-link">login</a>
+            <a href="/logout" class="auth-link logout">logout</a>
         </div>
     </header>
 
     <div class="main-content">
         
-        <a href="/create" class="btn-new">+ buat catatan baru</a>
+        <a href="/create" class="btn-new">+ make new log / 新しい日記を作り</a>
 
         {{ range . }}
         <div class="post">
             <h2><a href="/post?id={{ .ID }}">{{ .Title }}</a></h2>
             <p class="date">{{ .Date }}</p>
             <p class="content-preview">{{ .Content }}</p>
-            <a href="/post?id={{ .ID }}" class="detail-link">buka catatan &rarr;</a>
+            <a href="/post?id={{ .ID }}" class="detail-link">open log / 日記を開け &rarr;</a>
         </div>
         {{ else }}
             <div class="empty-state">
-                <p>Belum ada catatan tersimpan di vault ini.</p>
+                <p>data is empty.</p>
             </div>
         {{ end }}
 
