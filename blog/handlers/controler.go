@@ -226,6 +226,7 @@ func DetailPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	tmpl.Execute(w, post)
 }
+
 func DeletePostHandler(w http.ResponseWriter, r *http.Request) {
 	// --- PASANG SATPAM ---
 	if !IsLoggedIn(r) {
